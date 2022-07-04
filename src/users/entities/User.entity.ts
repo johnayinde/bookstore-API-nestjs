@@ -6,7 +6,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column('string')
+  @Column({ type: 'varchar' })
   name: string;
 
   @Column()
@@ -15,7 +15,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   refreshToken?: string;
 
   @BeforeInsert()

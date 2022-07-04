@@ -2,9 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './entities/User.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/signIn-user.dto';
-import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class UsersService {
@@ -22,9 +19,6 @@ export class UsersService {
   getUserByEmail(email: string) {
     const user = this.userRepo.findOne({ where: { email } });
 
-    if (!user) {
-      throw new NotFoundException();
-    }
     return user;
   }
 
