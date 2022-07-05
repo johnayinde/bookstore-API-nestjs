@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar' })
@@ -14,6 +14,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column({ type: Boolean, default: false })
+  isAdmin: boolean;
 
   @Column({ nullable: true })
   refreshToken?: string;
