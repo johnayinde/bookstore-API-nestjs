@@ -9,11 +9,12 @@ export class User {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
+
 
   @Column({ type: Boolean, default: false })
   isAdmin: boolean;
