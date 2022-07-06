@@ -1,8 +1,15 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Comment } from './../../comments/entities/comment.entity';
 
 @Entity()
 export class Book {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -10,6 +17,13 @@ export class Book {
 
   @Column()
   image: string;
+
+  @Column({ type: 'simple-array', default: [], nullable: true })
+  commentsId: number[];
+
+  // @OneToMany(() => Comment, (comment) => comment.book)
+  // @JoinColumn({ name: 'commentsId' })
+  // comments: Comment[];
 
   @Column()
   desc: string;

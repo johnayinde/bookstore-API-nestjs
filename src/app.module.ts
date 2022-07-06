@@ -7,6 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from './users/entities/User.entity';
 import { MailModule } from './mail/mail.module';
 import { BooksModule } from './books/books.module';
+import { Book } from './books/entities/book.entity';
+import { CommentsModule } from './comments/comments.module';
+import { Comment } from './comments/entities/comment.entity';
 
 @Module({
   imports: [
@@ -19,13 +22,14 @@ import { BooksModule } from './books/books.module';
       password: 'postgres',
       database: 'product_db',
       // entities: ['dist/src/**/*.entity.{js,ts}'],
-      entities: [User],
+      entities: [User, Book, Comment],
       synchronize: true,
     }),
     UsersModule,
     AuthModule,
     MailModule,
     BooksModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [AppService],
