@@ -15,8 +15,7 @@ export class BooksService {
   constructor(
     @InjectRepository(Book) private readonly bookRepo: Repository<Book>,
     @InjectRepository(Comment)
-    private readonly commentRepo: Repository<Comment>,
-    // private readonly commentService: CommentsService,
+    private readonly commentRepo: Repository<Comment>, // private readonly commentService: CommentsService,
   ) {}
 
   async postBook(data: CreateBookDto) {
@@ -46,7 +45,11 @@ export class BooksService {
   // }
 
   async findAllBooks() {
-    const allBooks = await this.bookRepo.find();
+    const allBooks = await this.bookRepo.find({
+      relations: {
+        comments: true,
+      },
+    });
     console.log(allBooks.length);
 
     if (allBooks.length <= 0) {
@@ -82,10 +85,6 @@ export class BooksService {
     if (!book) {
       return new HttpException('No book with given Id!', HttpStatus.NOT_FOUND);
     }
-    const comment = await this.commentRepo.find({ where: { bookId: book.id } });
-    console.log('all comments', comment);
-
-    await this.commentRepo.remove(comment);
 
     return this.bookRepo.delete(id);
   }
