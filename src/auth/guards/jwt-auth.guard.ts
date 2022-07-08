@@ -1,15 +1,24 @@
 import { AuthGuard } from '@nestjs/passport';
 import { JsonWebTokenError } from 'jsonwebtoken';
-import { UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Observable } from 'rxjs';
 
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  handleRequest(err: any, user: any, info: any, context: any, status?: any) {
-    if (info instanceof JsonWebTokenError) {
-      console.log(info);
+  constructor(private reflector: Reflector) {
+    super();
+  }
 
-      throw new UnauthorizedException('invalid token', info.message);
+  canActivate(context: ExecutionContext) {
+    const isPublic = this.reflector.getAllAndOverride('isPublic', [
+      context.getHandler(),
+      context.getClass,
+    ]);
+
+    if (isPublic) {
+      return true;
     }
 
-    return user;
+    return super.canActivate(context);
   }
 }
