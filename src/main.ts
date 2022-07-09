@@ -9,8 +9,6 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const reflector = new Reflector();
-  app.useGlobalGuards(new JwtAuthGuard(reflector));
   const config = new DocumentBuilder()
     .setTitle('Online Bookstore API')
     .setDescription(

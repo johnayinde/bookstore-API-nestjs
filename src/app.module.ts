@@ -10,6 +10,8 @@ import { BooksModule } from './books/books.module';
 import { Book } from './books/entities/book.entity';
 import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/entities/comment.entity';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -30,8 +32,15 @@ import { Comment } from './comments/entities/comment.entity';
     MailModule,
     BooksModule,
     CommentsModule,
+    CloudinaryModule,
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
