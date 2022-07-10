@@ -17,6 +17,6 @@ export class CreateBookDto {
   @IsString()
   author: string;
 
-  @IsString()
+  // @IsString()
   comments: string;
 }

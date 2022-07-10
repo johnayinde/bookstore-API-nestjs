@@ -18,13 +18,7 @@ export class Book {
   @Column()
   image: string;
 
-  // @Column({ type: 'simple-array', default: [], nullable: true })
-  // commentsId: number;
-  // @Column({ type: 'simple-array', default: [], nullable: true })
-  // commentsId: number[];
-
   @OneToMany(() => Comment, (comment) => comment.book)
-  // @JoinColumn({ name: 'commentsId' })
   comments: Comment[];
 
   @Column()

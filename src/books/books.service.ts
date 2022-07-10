@@ -1,25 +1,34 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { userInfo } from 'os';
 import { Repository } from 'typeorm';
 import { Book } from './entities/book.entity';
 import { EditBookDto } from './dto/edit-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
-import { Comment } from './../comments/entities/comment.entity';
-import { CommentsService } from './../comments/comments.service';
-import { CommentsController } from './../comments/comments.controller';
+import { CloudinaryService } from './../cloudinary/cloudinary.service';
+import { Express } from 'express';
 
 @Injectable()
 export class BooksService {
   constructor(
+    private cloudinary: CloudinaryService,
     @InjectRepository(Book) private readonly bookRepo: Repository<Book>,
-    @InjectRepository(Comment)
-    private readonly commentRepo: Repository<Comment>, // private readonly commentService: CommentsService,
   ) {}
 
-  async postBook(data: CreateBookDto) {
-    const book = Object.assign(new Book(), data);
+  async postBook(data: CreateBookDto, file: Express.Multer.File) {
+    const { url } = await this.cloudinary.uploadImage(file);
+
+    console.log({ url });
+
+    if (!url) {
+      throw new NotFoundException('image not uploaded');
+    }
+
+    const book = Object.assign(new Book(), { ...data, image: url });
     console.log(book);
 
     const newBook = await this.bookRepo.save(book).catch((e) => {
@@ -30,19 +39,6 @@ export class BooksService {
 
     return newBook;
   }
-
-  // async addComment(id, comment) {
-  //   const book = Object.assign(new Book(), data);
-  //   console.log(book);
-
-  //   const newBook = await this.bookRepo.save(book).catch((e) => {
-  //     console.log(e);
-
-  //     throw new HttpException('Book not created', HttpStatus.BAD_REQUEST);
-  //   });
-
-  //   return newBook;
-  // }
 
   async findAllBooks() {
     const allBooks = await this.bookRepo.find({
@@ -60,7 +56,12 @@ export class BooksService {
   }
 
   async findOne(id: number) {
-    const book = await this.bookRepo.findOne({ where: { id } });
+    const book = await this.bookRepo.findOne({
+      where: { id },
+      relations: {
+        comments: true,
+      },
+    });
 
     if (!book) {
       throw new HttpException('No book with given Id!', HttpStatus.NOT_FOUND);
