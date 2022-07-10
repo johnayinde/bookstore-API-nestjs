@@ -15,13 +15,9 @@ export class Comment {
   @Column()
   content: string;
 
-  // @Column({ nullable: true })
-  // bookId: number;
-
   @Column({ nullable: true })
   userId: number;
 
   @ManyToOne(() => Book, (book) => book.comments, { onDelete: 'CASCADE' })
-  // @JoinColumn({ name: 'bookId' })
   book: Book;
 }
