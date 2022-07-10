@@ -30,11 +30,7 @@ export class AuthHelperService {
       userId: user.id,
       ...values,
     };
-    console.log({ refreshObject });
-    console.log('at', await this.configService.get(jwtConstant.access_time));
-    console.log('as', await this.configService.get(jwtConstant.access_secret));
-    console.log('rt', await this.configService.get(jwtConstant.refresh_time));
-    console.log('rs', await this.configService.get(jwtConstant.refresh_secret));
+
 
     const [access, refresh] = await Promise.all([
       this.jwt.sign(refreshObject, {

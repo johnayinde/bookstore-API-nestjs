@@ -15,6 +15,7 @@ async function bootstrap() {
       'An API that exposed all endpoints to create delete edit a book',
     )
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

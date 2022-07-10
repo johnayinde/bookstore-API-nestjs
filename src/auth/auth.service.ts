@@ -14,7 +14,7 @@ import { RefreshEntity } from './entities/refresh-entity';
 import { jwtConstant } from './../constants/jwt.constant';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './../users/dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { User } from 'src/users/entities/User.entity';
 import { decode, sign, verify } from 'jsonwebtoken';
 
@@ -54,7 +54,7 @@ export class AuthService {
     console.log({ verifyPassword });
 
     if (!verifyPassword) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid Password');
     }
 
     return await this.authHelper.refreshAndAccessToken(user, values);
