@@ -13,17 +13,29 @@ import {
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Express } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiTags,
+  ApiOkResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { EditBookDto } from './dto/edit-book.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Public } from 'src/auth/decorator/public.decorator';
+import { Public } from '../auth/decorator/public.decorator';
+import { Book } from './entities/book.entity';
 
+@ApiBearerAuth()
 @ApiTags('books')
 @Controller('books')
 export class BooksController {
   constructor(private bookService: BooksService) {}
 
   @Post()
+  @ApiCreatedResponse({
+    type: CreateBookDto,
+    description: 'book request data',
+    isArray: true,
+  })
   @UseInterceptors(FileInterceptor('file'))
   async createBook(
     @Body() body: CreateBookDto,
@@ -34,13 +46,22 @@ export class BooksController {
     return await this.bookService.postBook(body, file);
   }
 
-  @Public()
   @Get()
+  @Public()
+  @ApiOkResponse({
+    type: Book,
+    description: 'Get all books',
+    isArray: true,
+  })
   async getAll() {
     return await this.bookService.findAllBooks();
   }
 
   @Get('/:id')
+  @ApiOkResponse({
+    type: Book,
+    description: 'Get a single book',
+  })
   async getById(@Param('id', ParseIntPipe) id: number) {
     console.log(typeof id);
 
@@ -48,6 +69,10 @@ export class BooksController {
   }
 
   @Put('/:id')
+  @ApiOkResponse({
+    type: Book,
+    description: 'Update a single book',
+  })
   async updateBook(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: EditBookDto,

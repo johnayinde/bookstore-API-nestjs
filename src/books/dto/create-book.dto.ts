@@ -1,4 +1,6 @@
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 export class CreateBookDto {
   @IsNotEmpty()
@@ -16,7 +18,4 @@ export class CreateBookDto {
   @IsNotEmpty()
   @IsString()
   author: string;
-
-  // @IsString()
-  comments: string;
 }
