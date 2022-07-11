@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class EditBookDto {
   @ApiPropertyOptional()
@@ -17,4 +17,12 @@ export class EditBookDto {
   @ApiPropertyOptional()
   @IsString()
   author?: string;
+
+  @ApiPropertyOptional()
+  @IsNumber()
+  quantity?: number;
+
+  @ApiPropertyOptional()
+  @IsNumber()
+  price?: number;
 }

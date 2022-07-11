@@ -69,6 +69,17 @@ export class BooksService {
     return book;
   }
 
+  async findOneById(id: number) {
+    const book = await this.bookRepo.findOne({
+      where: { id },
+    });
+
+    if (!book) {
+      throw new HttpException('No book with given Id!', HttpStatus.NOT_FOUND);
+    }
+    return book;
+  }
+
   async updateBook(id: number, data: EditBookDto) {
     const book = await this.findOne(id);
 

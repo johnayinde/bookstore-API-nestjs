@@ -26,4 +26,12 @@ export class Book {
   @ApiProperty()
   @Column()
   author: string;
+
+  @ApiProperty()
+  @Column()
+  price: number;
+
+  @ApiProperty()
+  @Column()
+  quantity: number;
 }
