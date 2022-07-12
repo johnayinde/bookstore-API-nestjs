@@ -9,6 +9,8 @@ import {
   Put,
   UploadedFile,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -36,14 +38,15 @@ export class BooksController {
     description: 'book request data',
     isArray: true,
   })
-  @UseInterceptors(FileInterceptor('file'))
+  @UsePipes(ValidationPipe)
+  // @UseInterceptors(FileInterceptor('file'))
   async createBook(
     @Body() body: CreateBookDto,
-    @UploadedFile() file: Express.Multer.File,
+    // @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log({ file });
+    // console.log({ file });
 
-    return await this.bookService.postBook(body, file);
+    return await this.bookService.postBook(body);
   }
 
   @Get()
