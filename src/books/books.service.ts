@@ -19,16 +19,17 @@ export class BooksService {
     @InjectRepository(Book) private readonly bookRepo: Repository<Book>,
   ) {}
 
-  async postBook(data: CreateBookDto, file: Express.Multer.File) {
-    const { url } = await this.cloudinary.uploadImage(file);
+  async postBook(data: CreateBookDto, file?: Express.Multer.File) {
+    // const { url } = await this.cloudinary.uploadImage(file);
 
-    console.log({ url });
+    // console.log({ url });
 
-    if (!url) {
-      throw new NotFoundException('image not uploaded');
-    }
+    // if (!url) {
+    //   throw new NotFoundException('image not uploaded');
+    // }
 
-    const book = Object.assign(new Book(), { ...data, image: url });
+    // const book = Object.assign(new Book(), { ...data, image: url });
+    const book = Object.assign(new Book(), { ...data });
     console.log(book);
 
     const newBook = await this.bookRepo.save(book).catch((e) => {
