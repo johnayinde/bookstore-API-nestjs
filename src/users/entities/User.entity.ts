@@ -1,7 +1,15 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { Book } from 'src/books/entities/book.entity';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 @Entity()
 export class User {
@@ -25,6 +33,10 @@ export class User {
   @ApiProperty()
   @Column({ type: Boolean, default: false })
   isAdmin: boolean;
+
+  // // @Column()
+  // @OneToMany(() => Cart, (cart) => cart.user)
+  // carts: Cart[];
 
   @ApiProperty()
   @Column({ nullable: true })
