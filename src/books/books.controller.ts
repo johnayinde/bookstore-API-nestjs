@@ -36,7 +36,6 @@ export class BooksController {
   @ApiCreatedResponse({
     type: CreateBookDto,
     description: 'book request data',
-    isArray: true,
   })
   @UsePipes(ValidationPipe)
   // @UseInterceptors(FileInterceptor('file'))
