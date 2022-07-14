@@ -9,15 +9,20 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/decorator/user.decorator';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { GetUser } from '../auth/decorator/user.decorator';
 import { Public } from './../auth/decorator/public.decorator';
+import { Comment } from './entities/comment.entity';
 
 @ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
+  @ApiCreatedResponse({
+    type: Comment,
+    description: 'comment created successfully',
+  })
   @Post('/:bookId')
   create(
     @GetUser() userId,
@@ -27,12 +32,20 @@ export class CommentsController {
     return this.commentsService.create(bookId, createCommentDto, userId);
   }
 
+  @ApiOkResponse({
+    type: Comment,
+    description: 'Book retrived successfully',
+    isArray: true,
+  })
   @Public()
   @Get()
   async getAll() {
     return await this.commentsService.findAllComments();
   }
 
+  @ApiOkResponse({
+    description: 'Book successfully deleted',
+  })
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.commentsService.remove(id);
