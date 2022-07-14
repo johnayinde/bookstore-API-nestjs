@@ -12,6 +12,8 @@ import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/entities/comment.entity';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { CartModule } from './cart/cart.module';
+import { Cart } from './cart/entities/cart.entity';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
       password: 'postgres',
       database: 'product_db',
       // entities: ['dist/src/**/*.entity.{js,ts}'],
-      entities: [User, Book, Comment],
+      entities: [User, Book, Comment, Cart],
       synchronize: true,
     }),
     UsersModule,
@@ -33,6 +35,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     BooksModule,
     CommentsModule,
     CloudinaryModule,
+    CartModule,
   ],
   controllers: [],
   providers: [
