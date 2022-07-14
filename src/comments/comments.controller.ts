@@ -9,11 +9,17 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBasicAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetUser } from '../auth/decorator/user.decorator';
 import { Public } from './../auth/decorator/public.decorator';
 import { Comment } from './entities/comment.entity';
 
+@ApiBasicAuth()
 @ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
