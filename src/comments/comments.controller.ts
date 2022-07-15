@@ -10,7 +10,7 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import {
-  ApiBasicAuth,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
@@ -19,7 +19,7 @@ import { GetUser } from '../auth/decorator/user.decorator';
 import { Public } from './../auth/decorator/public.decorator';
 import { Comment } from './entities/comment.entity';
 
-@ApiBasicAuth()
+@ApiBearerAuth()
 @ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
