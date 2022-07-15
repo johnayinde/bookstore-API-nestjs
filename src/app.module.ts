@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/entities/User.entity';
 import { MailModule } from './mail/mail.module';
 import { BooksModule } from './books/books.module';
@@ -18,16 +18,20 @@ import { Cart } from './cart/entities/cart.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'product_db',
-      // entities: ['dist/src/**/*.entity.{js,ts}'],
-      entities: [User, Book, Comment, Cart],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: +configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        // entities: ['dist/src/**/*.entity.{js,ts}'],
+        entities: [User, Book, Comment, Cart],
+        synchronize: true,
+      }),
     }),
     UsersModule,
     AuthModule,
