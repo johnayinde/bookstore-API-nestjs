@@ -14,6 +14,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { CartModule } from './cart/cart.module';
 import { Cart } from './cart/entities/cart.entity';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { Cart } from './cart/entities/cart.entity';
     CommentsModule,
     CloudinaryModule,
     CartModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [
