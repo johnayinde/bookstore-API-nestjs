@@ -24,7 +24,10 @@ import { OrdersModule } from './orders/orders.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get('DATABASE_URL'),
+        url:
+          configService.get('ENV') === 'development'
+            ? ''
+            : configService.get('DATABASE_URL'),
         host: configService.get('DB_HOST'),
         port: +configService.get<number>('DB_PORT'),
         username: configService.get('DB_USERNAME'),
@@ -34,8 +37,8 @@ import { OrdersModule } from './orders/orders.module';
           configService.get('ENV') === 'development'
             ? false
             : { rejectUnauthorized: false },
-        // entities: ['dist/src/**/*.entity.{js,ts}'],
-        entities: [User, Book, Comment, Cart],
+        entities: ['dist/**/*.entity.{js,ts}'],
+        // entities: [User, Book, Comment, Cart],
         synchronize: true,
       }),
     }),
