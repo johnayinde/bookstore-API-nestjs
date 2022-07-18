@@ -6,7 +6,7 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => Cart, (cart) => cart.id)
+  @OneToMany(() => Cart, (cart) => cart.items)
   items: Cart[];
 
   @Column()
