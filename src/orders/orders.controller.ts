@@ -1,29 +1,34 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { GetUser } from 'src/auth/decorator/user.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
+@ApiBearerAuth()
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  create(@GetUser() userId) {
-    return this.ordersService.create(userId);
+  async createOrder(@GetUser() userId) {
+    console.log({ userId });
+
+    return await this.ordersService.create(userId);
   }
 
   @Get()
-  findAll(@GetUser() userId) {
-    return this.ordersService.findUserOrder(userId);
+  async findUserOrder(@GetUser() userId) {
+    return await this.ordersService.findUserOrder(userId);
+  }
+
+  @Patch(':orderId')
+  async update(@Param('orderId') orderId: number, @GetUser() userId) {
+    return await this.ordersService.payUserOrders(orderId);
   }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.ordersService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-  //   return this.ordersService.update(+id, updateOrderDto);
   // }
 
   // @Delete(':id')

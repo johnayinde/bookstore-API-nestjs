@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { CartService } from './../cart/cart.service';
@@ -15,40 +21,60 @@ export class OrdersService {
   async create(userId: number) {
     const userCartItems = await this.cartService.findAllCartsByUserId(userId);
 
+    console.log({ userCartItems });
+
     const totalPrice = userCartItems
       .map((item) => item.total_price)
       .reduce((a, b) => a + b);
-    const userOrder = await this.findUserOrder(userId);
 
-    if (userOrder) {
-      throw new HttpException(
-        'User already have unpaid orders',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    console.log({ totalPrice });
 
-    const newOrder = this.orderRepo.create({
-      userId: userId,
-      items: userCartItems,
-      sub_total: totalPrice,
+    const userOrder = await this.orderRepo.findOne({
+      where: { userId, payed: false },
     });
 
-    return await this.orderRepo.save(newOrder);
+    console.log(!userOrder);
+
+    if (!userOrder) {
+      console.log('create and save order');
+      const newOrder = this.orderRepo.create({
+        userId: userId,
+        items: userCartItems,
+        sub_total: totalPrice,
+      });
+
+      return await this.orderRepo.save(newOrder);
+    } else {
+      // console.log('user exist');
+
+      throw new UnauthorizedException('User has any unpaid orders');
+    }
   }
 
   async findUserOrder(userId: number) {
-    return await this.orderRepo.findOne({ where: { userId } });
+    const userOrder = await this.orderRepo.findOne({
+      where: { userId },
+    });
+
+    console.log({ userOrder });
+
+    if (!userOrder) {
+      throw new NotFoundException('User does not have any orders available');
+    }
+
+    return userOrder;
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} order`;
-  // }
+  async payUserOrders(orderId: number, userId?: number) {
+    const userOrder = await this.orderRepo.findOneBy({ id: orderId });
 
-  // update(id: number, updateOrderDto: UpdateOrderDto) {
-  //   return `This action updates a #${id} order`;
-  // }
+    if (!userOrder) {
+      throw new NotFoundException('Order does not exist');
+    }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} order`;
-  // }
+    await this.orderRepo.update(userOrder.id, { payed: true });
+    // await this.cartService.removeAllUserCarts(userId);
+
+    return await this.orderRepo.findBy({ id: orderId });
+  }
 }

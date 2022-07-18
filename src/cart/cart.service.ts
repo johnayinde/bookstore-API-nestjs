@@ -70,7 +70,9 @@ export class CartService {
   //   return `This action updates a #${id} cart`;
   // }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} cart`;
-  // }
+  async removeAllUserCarts(userId: number) {
+    const cartItems = await this.cartRepo.delete({ userId: userId });
+
+    return cartItems;
+  }
 }

@@ -23,6 +23,6 @@ export class Cart {
   @Column()
   total_price: number;
 
-  @ManyToOne(() => Order, (order) => order.items)
+  @ManyToOne(() => Order, (order) => order.id, { onDelete: 'CASCADE' })
   items: Order;
 }
