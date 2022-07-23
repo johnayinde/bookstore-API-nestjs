@@ -1,14 +1,24 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { GetUser } from 'src/auth/decorator/user.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Order } from './entities/order.entity';
 
 @ApiBearerAuth()
+@ApiTags('orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @ApiCreatedResponse({
+    type: Order,
+    description: 'Order created successfully',
+  })
   @Post()
   async createOrder(@GetUser() userId) {
     console.log({ userId });
@@ -16,11 +26,20 @@ export class OrdersController {
     return await this.ordersService.create(userId);
   }
 
+  @ApiOkResponse({
+    type: Order,
+    description: 'Get user paided orders',
+  })
   @Get()
   async findUserOrder(@GetUser() userId) {
     return await this.ordersService.findUserOrder(userId);
   }
 
+  @ApiOkResponse({
+    type: Order,
+    description: 'Get user paided orders',
+    isArray: true,
+  })
   @Patch(':orderId')
   async update(@Param('orderId') orderId: number, @GetUser() userId) {
     return await this.ordersService.payUserOrders(orderId);
