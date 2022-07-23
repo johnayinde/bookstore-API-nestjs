@@ -1,12 +1,8 @@
 import {
-  HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { CartService } from './../cart/cart.service';
 import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -47,7 +43,7 @@ export class OrdersService {
     } else {
       // console.log('user exist');
 
-      throw new UnauthorizedException('User has any unpaid orders');
+      throw new UnauthorizedException('User has an unpaid orders');
     }
   }
 
