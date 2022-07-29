@@ -1,23 +1,25 @@
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetUser } from 'src/auth/decorator/user.decorator';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { Cart } from './entities/cart.entity';
 
 @ApiBearerAuth()
+@ApiTags('carts')
 @Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
+  @ApiCreatedResponse({
+    type: Cart,
+    description: 'Cart created successfully',
+  })
   @Post()
   async create(@Body() createCartDto: CreateCartDto, @GetUser() userId) {
     return await this.cartService.create(
@@ -27,6 +29,11 @@ export class CartController {
     );
   }
 
+  @ApiOkResponse({
+    type: Cart,
+    description: 'Get all user carts',
+    isArray: true,
+  })
   @Get()
   async findAll(@GetUser() userId) {
     return await this.cartService.findAllCartsByUserId(userId);
